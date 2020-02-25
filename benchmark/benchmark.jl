@@ -4,7 +4,6 @@ using BenchmarkTools
 using Statistics
 using Plots
 using LaTeXStrings
-using JLD
 
 # Propterties of plots
 gr(titleloc = :right,titlefont = font(15),linewidth = 2,markersize = 6)
@@ -290,58 +289,3 @@ savefig(scatter([(0.0, 0.0), (1.0, 1.0), (1.0, 3.0), (1.0, 2.5), (2.5, 1.0), (3.
 savefig(scatter([(0.0, 0.0), (0.5, 1.0), (0.5, 2.0), (1.0, 0.5), (1.5, 1.5), (2.0, 0.5), (2.0, 2.0)], color=[:green,:blue,:blue,:blue,:blue,:blue,:red], shape=[:utriangle,:circle,:circle,:circle,:circle,:circle,:pentagon],legend=false,xlabel=L"x",ylabel=L"y",title="(c)",xlims = (-0.5,10.5),xticks = 0:1:10,ylims = (-0.5,5.5),yticks = 0:1:5),"evenly.pdf")
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-b1_benchmarks = load("../Benchmark Results/b1_benchmarks.jld","b1_benchmarks")
-b1_results = load("../Benchmark Results/b1_results.jld","b1_results")
-
-b2_benchmarks = load("../Benchmark Results/b2_benchmarks.jld","b2_benchmarks")
-b2_results = load("../Benchmark Results/b2_results.jld","b2_results")
-
-b3_benchmarks = load("../Benchmark Results/b3-4_benchmarks.jld","b3_benchmarks")
-b3_results = load("../Benchmark Results/b3-4_results.jld","b3_results")
-
-b4_results = load("../Benchmark Results/b4_results.jld","b4_results")
-b5_results = load("../Benchmark Results/b5_results.jld","b5_results")
-
-b6_benchmarks = load("../Benchmark Results/b6_benchmarks.jld","b6_benchmarks")
-b6_results = load("../Benchmark Results/b6_results.jld","b6_results")
-
-b35_benchmarks1 = load("../Benchmark Results/b3-5_benchmarks-1.jld","b3_benchmarks")
-b35_results1 = load("../Benchmark Results/b3-5_results-1.jld","b3_results")
-b35_results2 = load("../Benchmark Results/b3-5_results.jld","b3_results")
-b35_results = vcat(b35_results1,b35_results2)
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# IA is varied in this test case for different variants of customer placements
-IA_VARIANTS = [
-    # Nearest customer locations added first
-    [2],
-    [2,3],
-    [2,3,4],
-    [2,3,4,5],
-    # Furthest customer locations added first
-    [5],
-    [5,4],
-    [5,4,3],
-    [5,4,3,2]
-]
-
-# No of advance customers
-x = map(I -> length(I),IA_VARIANTS)[1:4]
-
-y_contribution = reshape(map(r -> r.expected_contribution, b35_results), (4, 6))
-y_no_states = reshape(map(r -> r.number_pre_decision_states, b35_results), (4, 6))
-
-xlabel = L"|\mathcal{I}^{ca}|"
-
-contribution1 = plot(x,y_contribution[:,1:3],xlabel=xlabel,ylabel=L"C^\pi",shape=:circle,label=labels,legend=:bottomright,title="(a.1)")
-contribution2 = plot(x,y_contribution[:,4:6],xlabel=xlabel,ylabel=L"C^\pi",shape=:circle,label=labels,legend=:bottomright,title="(a.2)")
-
-plot(x,y_no_states[:,1:3],xlabel=xlabel,ylabel=L"|\mathcal{S}|",shape=:circle,label=labels,legend=:bottomright,title="(b.1)")
-no_states1 = plot!([4654243], seriestype="hline", label="Reference Line", color=:red)
-plot(x,y_no_states[:,4:6],xlabel=xlabel,ylabel=L"|\mathcal{S}|",shape=:circle,label=labels,legend=:bottomright,title="(b.2)")
-no_states2 = plot!([4654243], seriestype="hline", label="Reference Line", color=:red)
-
-savefig(contribution1,"b3-5-contribution1.pdf")
-savefig(contribution2,"b3-5-contribution2.pdf")
-savefig(no_states1,"b3-5-no_states1.pdf")
-savefig(no_states2,"b3-5-no_states2.pdf")

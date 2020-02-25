@@ -1,12 +1,10 @@
+include("../src/types.jl")
+include("../src/valueiteration.jl")
 using Test
 
 # To enable debug logs:
 # ENV["JULIA_DEBUG"] = "all"
 # ENV["JULIA_DEBUG"] = ""
-
-# add source files
-include("../src/types.jl")
-include("../src/valueiteration.jl")
 
 state = PreDecisionState([-1,1,0,2,3,1,-1], 1, 0)
 node = transition(
